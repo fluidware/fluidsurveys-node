@@ -1,0 +1,44 @@
+{
+  "name": "fluidsurveys",
+  "description": "FluidSurveys API wrapper",
+  "version": "0.1.0",
+  "homepage": "http://fluidsurveys.com",
+  "author": {
+    "name": "Jason Mulligan",
+    "email": "jmulligan@fluidsurveys.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/fluidware/fluidsurveys-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fluidware/fluidsurveys-node/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://raw.github.com/fluidware/fluidsurveys-node/master/LICENSE"
+    }
+  ],
+  "main": "lib/turtle.io",
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "dependencies": {
+    "keigai": "0.2.16",
+    "btoa": "1.1.2"
+  },
+  "devDependencies": {
+    "grunt" : "~0.4.1",
+    "grunt-cli" : "~0.1.7",
+    "grunt-sed": "~0.1",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-jshint": "~0.1",
+    "grunt-contrib-nodeunit": "~0.1.2",
+    "grunt-contrib-watch": "~0.2"
+  },
+  "keywords": ["fluidsurveys", "api", "wrapper", "survey"]
+}

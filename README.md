@@ -10,21 +10,16 @@ View the lastest release API documentation [FluidSurveys API](https://docs.fluid
 ## Example
 ```javascript
 var fluidsurveys = require("fluidsurveys"),
-    key          = "71863c900237428b8a1712fed1429d4d",
-    password     = "keepThisSecret";
+    api          = fluidsurveys("71863c900237428b8a1712fed1429d4d", "keepThisSecret");
 
-fluidsurveys.init(key, password);
-
-fluidsurveys.contacts(function (err, data) {
+api.list("survey", {group: "testing"}, function(err, arg) {
 	if (err) {
 		// Handle the error
 	}
 	else {
-		data.forEach(function (i) {
-			// i represents a contact
-		});
+		// `arg` is a list of surveys in the "testing" group
 	}
-}
+})
 ```
 
 ## License

@@ -1,12 +1,9 @@
 /.idea/
 /node_modules/
-/doc/
 /src/
 /test/
-.travis.yml
 .git
 .gitignore
 .jshintrc
 Gruntfile.js
-benchmark.js
-sample.js
+test.js

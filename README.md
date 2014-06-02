@@ -12,7 +12,7 @@ View the lastest release API documentation [FluidSurveys API](https://docs.fluid
 var fluidsurveys = require("fluidsurveys"),
     api          = fluidsurveys("71863c900237428b8a1712fed1429d4d", "keepThisSecret");
 
-api.list("survey", {group: "testing"}, function(err, arg) {
+api.list("surveys", {group: "testing"}, function(err, arg) {
 	if (err) {
 		// Handle the error
 	}

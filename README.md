@@ -1,16 +1,16 @@
 # FluidSurveys API wrapper
-***node.js wrapper for the FluidSurveys API***
+***node.js wrapper for the FluidSurveys V3 API***
 
 ## Introduction
-This library provides a pure node.js interface for the [FluidSurveys API](https://docs.fluidsurveys.com). It requires node.js 0.8.x and newer.
+This library provides a pure node.js interface for the [FluidSurveys API](http://docs.fluidsurveys.com). It requires node.js 0.8.x and newer.
 
 ## Documentation
-View the lastest release API documentation [FluidSurveys API](https://docs.fluidsurveys.com).
+View the lastest release API documentation [FluidSurveys API](http://docs.fluidsurveys.com).
 
 ## Example
 ```javascript
 var fluidsurveys = require("fluidsurveys"),
-    api          = fluidsurveys("71863c900237428b8a1712fed1429d4d", "keepThisSecret");
+    api          = fluidsurveys("username|apikey", "password");
 
 api.list("surveys", {group: "testing"}, function(err, arg) {
 	if (err) {
@@ -23,7 +23,7 @@ api.list("surveys", {group: "testing"}, function(err, arg) {
 ```
 
 ## API
-Entity types are puralized to match collections, e.g. `surveys`.
+Entity types are puralized to match collections. You can interact with `templates`, `surveys`, `collectors`, `contacts`, `embeds`, `contact-lists`, & `webhooks`.
 
 ### create( type, data, cb )
 Creates a new entity, such as `surveys`.

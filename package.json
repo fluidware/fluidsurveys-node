@@ -1,7 +1,7 @@
 {
   "name": "fluidsurveys",
   "description": "FluidSurveys API wrapper",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "http://fluidsurveys.com",
   "author": {
     "name": "Jason Mulligan",
@@ -20,7 +20,7 @@
       "url": "https://raw.github.com/fluidware/fluidsurveys-node/master/LICENSE"
     }
   ],
-  "main": "lib/turtle.io",
+  "main": "lib/fluidsurveys",
   "engines": {
     "node": ">=0.8.0"
   },

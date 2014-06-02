@@ -25,10 +25,10 @@ FluidSurveys.prototype.constructor = FluidSurveys;
  * @method create
  * @param  {String}   type Type of instance to create
  * @param  {Object}   data Instance data
- * @param  {Function} fn   Callback
+ * @param  {Function} cb   Callback
  * @return {Object}        {@link FluidSurveys}
  */
-FluidSurveys.prototype.create = function ( type, data, fn ) {
+FluidSurveys.prototype.create = function ( type, data, cb ) {
 	var self = this,
 	    args, headers, url;
 
@@ -51,12 +51,12 @@ FluidSurveys.prototype.create = function ( type, data, fn ) {
 				authorization: self.header,
 				"content-type" : "application/json"
 			} ).then( function ( arg ) {
-				fn( null, arg );
+				cb( null, arg );
 			}, function ( e ) {
-				fn( e, null );
+				cb( e, null );
 			} );
 		}, function ( e ) {
-			fn( e, null );
+			cb( e, null );
 		} );
 	}
 	else {
@@ -69,9 +69,9 @@ FluidSurveys.prototype.create = function ( type, data, fn ) {
 		}
 
 		this.request( "post", url, args, headers ).then( function ( arg ) {
-			fn( null, arg );
+			cb( null, arg );
 		}, function ( e ) {
-			fn( e, null );
+			cb( e, null );
 		} );
 	}
 
@@ -84,10 +84,10 @@ FluidSurveys.prototype.create = function ( type, data, fn ) {
  * @method createChild
  * @param  {String}   type Type of instance to create
  * @param  {Object}   data Instance data
- * @param  {Function} fn   Callback
+ * @param  {Function} cb   Callback
  * @return {Object}        {@link FluidSurveys}
  */
-FluidSurveys.prototype.createChild = function ( parentType, parentId, childType, data, fn ) {
+FluidSurveys.prototype.createChild = function ( parentType, parentId, childType, data, cb ) {
 	var args, url;
 
 	if ( typeof parentType != "string" || !( data instanceof Object ) || routes.collections[parentType] === undefined || routes.collections[parentType].indexOf( childType ) == -1 ) {
@@ -109,9 +109,9 @@ FluidSurveys.prototype.createChild = function ( parentType, parentId, childType,
 		authorization  : this.header,
 		"content-type" : "application/json"
 	} ).then( function ( arg ) {
-		fn( null, arg );
+		cb( null, arg );
 	}, function ( e ) {
-		fn( e, null );
+		cb( e, null );
 	} );
 
 	return this;
@@ -123,11 +123,11 @@ FluidSurveys.prototype.createChild = function ( parentType, parentId, childType,
  * @method list
  * @param  {String}   type Type of instance to list
  * @param  {Number}   id   Instance identifier
- * @param  {Function} fn   Callback
+ * @param  {Function} cb   Callback
  * @return {Object}        {@link FluidSurveys}
  */
-FluidSurveys.prototype["delete"] = function ( type, id, fn ) {
-	if ( typeof fn != "function" ) {
+FluidSurveys.prototype["delete"] = function ( type, id, cb ) {
+	if ( typeof cb != "function" ) {
 		throw new Error( "Invalid arguments" );
 	}
 
@@ -135,9 +135,9 @@ FluidSurveys.prototype["delete"] = function ( type, id, fn ) {
 		accept: "application/json",
 		authorization: this.header
 	} ).then( function ( arg ) {
-		fn( null, arg );
+		cb( null, arg );
 	}, function ( e ) {
-		fn( e, null );
+		cb( e, null );
 	} );
 
 	return this;
@@ -149,11 +149,11 @@ FluidSurveys.prototype["delete"] = function ( type, id, fn ) {
  * @method details
  * @param  {String}   type Type of instance
  * @param  {Number}   id   Instance identifier
- * @param  {Function} fn   Callback
+ * @param  {Function} cb   Callback
  * @return {Object}        {@link FluidSurveys}
  */
-FluidSurveys.prototype.get = function ( type, id, fn ) {
-	if ( typeof fn != "function" ) {
+FluidSurveys.prototype.get = function ( type, id, cb ) {
+	if ( typeof cb != "function" ) {
 		throw new Error( "Invalid arguments" );
 	}
 
@@ -161,9 +161,9 @@ FluidSurveys.prototype.get = function ( type, id, fn ) {
 		accept: "application/json",
 		authorization: this.header
 	} ).then( function ( arg ) {
-		fn( null, arg );
+		cb( null, arg );
 	}, function ( e ) {
-		fn( e, null );
+		cb( e, null );
 	} );
 
 	return this;
@@ -177,11 +177,11 @@ FluidSurveys.prototype.get = function ( type, id, fn ) {
  * @param  {Number}   parentId   Instance identifier
  * @param  {String}   childType  Type of instance
  * @param  {Number}   childId    Instance identifier
- * @param  {Function} fn         Callback
+ * @param  {Function} cb         Callback
  * @return {Object}              {@link FluidSurveys}
  */
-FluidSurveys.prototype.getChild = function ( parentType, parentId, childType, childId, fn ) {
-	if ( typeof parentType != "string" || typeof fn != "function" || routes.collections[parentType] === undefined || routes.collections[parentType].indexOf( childType ) == -1 ) {
+FluidSurveys.prototype.getChild = function ( parentType, parentId, childType, childId, cb ) {
+	if ( typeof parentType != "string" || typeof cb != "function" || routes.collections[parentType] === undefined || routes.collections[parentType].indexOf( childType ) == -1 ) {
 		throw new Error( "Invalid arguments" );
 	}
 
@@ -189,9 +189,9 @@ FluidSurveys.prototype.getChild = function ( parentType, parentId, childType, ch
 		accept: "application/json",
 		authorization: this.header
 	} ).then( function ( arg ) {
-		fn( null, arg );
+		cb( null, arg );
 	}, function ( e ) {
-		fn( e, null );
+		cb( e, null );
 	} );
 };
 
@@ -203,10 +203,10 @@ FluidSurveys.prototype.getChild = function ( parentType, parentId, childType, ch
  * @param  {Object} args Query string filters
  * @return {Object}      {@link FluidSurveys}
  */
-FluidSurveys.prototype.list = function ( type, args, fn ) {
+FluidSurveys.prototype.list = function ( type, args, cb ) {
 	var queryString = "";
 
-	if ( typeof type != "string" || typeof fn != "function" || routes.collections[type] === undefined ) {
+	if ( typeof type != "string" || typeof cb != "function" || routes.collections[type] === undefined ) {
 		throw new Error( "Invalid arguments" );
 	}
 
@@ -218,9 +218,9 @@ FluidSurveys.prototype.list = function ( type, args, fn ) {
 		accept: "application/json",
 		authorization: this.header
 	} ).then( function ( arg ) {
-		fn( null, arg );
+		cb( null, arg );
 	}, function ( e ) {
-		fn( e, null );
+		cb( e, null );
 	} );
 };
 
@@ -232,13 +232,13 @@ FluidSurveys.prototype.list = function ( type, args, fn ) {
  * @param  {Number}   parentId   Instance identifier
  * @param  {String}   childType  Type of instance
  * @param  {Number}   args       Query string filters
- * @param  {Function} fn         Callback
+ * @param  {Function} cb         Callback
  * @return {Object}              {@link FluidSurveys}
  */
-FluidSurveys.prototype.listChildren = function ( parentType, parentId, childType, args, fn ) {
+FluidSurveys.prototype.listChildren = function ( parentType, parentId, childType, args, cb ) {
 	var queryString = "";
 
-	if ( typeof parentType != "string" || typeof fn != "function" || routes.collections[parentType] === undefined || routes.collections[parentType].indexOf( childType ) == -1 ) {
+	if ( typeof parentType != "string" || typeof cb != "function" || routes.collections[parentType] === undefined || routes.collections[parentType].indexOf( childType ) == -1 ) {
 		throw new Error( "Invalid arguments" );
 	}
 
@@ -250,9 +250,9 @@ FluidSurveys.prototype.listChildren = function ( parentType, parentId, childType
 		accept: "application/json",
 		authorization: this.header
 	} ).then( function ( arg ) {
-		fn( null, arg );
+		cb( null, arg );
 	}, function ( e ) {
-		fn( e, null );
+		cb( e, null );
 	} );
 };
 
@@ -286,13 +286,13 @@ FluidSurveys.prototype.request = function ( type, uri, body, headers ) {
  * @param  {String}   type Type of instance
  * @param  {Number}   id   Instance data
  * @param  {Object}   data HTTP request body
- * @param  {Function} fn   Callback
+ * @param  {Function} cb   Callback
  * @return {Object}        {@link FluidSurveys}
  */
-FluidSurveys.prototype.update = function ( type, id, data, fn ) {
+FluidSurveys.prototype.update = function ( type, id, data, cb ) {
 	var headers, args, url;
 
-	if ( !( data instanceof Object ) || typeof fn != "function" ) {
+	if ( !( data instanceof Object ) || typeof cb != "function" ) {
 		throw new Error( "Invalid arguments" );
 	}
 
@@ -313,9 +313,9 @@ FluidSurveys.prototype.update = function ( type, id, data, fn ) {
 	}
 
 	this.request( "put", url, args, headers ).then( function ( arg ) {
-		fn( null, arg );
+		cb( null, arg );
 	}, function ( e ) {
-		fn( e, null );
+		cb( e, null );
 	} );
 
 	return this;

@@ -25,31 +25,28 @@ api.list("surveys", {group: "testing"}, function(err, arg) {
 ## API
 Entity types are puralized to match collections, e.g. `surveys`.
 
-### create( type, data, fn )
+### create( type, data, cb )
 Creates a new entity, such as `surveys`.
 
-### createChild ( parentType, parentId, childType, data, fn )
+### createChild ( parentType, parentId, childType, data, cb )
 Creates a child entity under a parent, such as `collectors` under `surveys`.
 
-### delete ( type, id, fn )
+### delete ( type, id, cb )
 Deletes an entity.
 
-### get ( type, id, fn )
+### get ( type, id, cb )
 Gets an entity.
 
-### getChild ( parentType, parentId, childType, childId, fn )
+### getChild ( parentType, parentId, childType, childId, cb )
 Gets a child entity under a parent, such as `collectors` under `surveys`.
 
-### list ( type, args, fn )
+### list ( type, args, cb )
 Gets a paginated list of entities.
 
-### listChildren ( parentType, parentId, childType, args, fn )
+### listChildren ( parentType, parentId, childType, args, cb )
 Gets a paginated list of children under a parent.
 
-### request ( type, uri, body, headers )
-Abstracts HTTP request/response handling, returns a Deferred (Promise).
-
-### update ( type, id, data, fn )
+### update ( type, id, data, cb )
 Updates an entity.
 
 ## License

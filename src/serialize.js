@@ -10,9 +10,9 @@ function serialize ( arg ) {
 
 	if ( arg !== undefined ) {
 		iterate( arg, function ( value, key ) {
-			result += "?" + key + "=" + value
+			result += "&" + key + "=" + encodeURIComponent(value);
 		} );
 	}
 
-	return result.replace( /^\?/, "" );
+	return result.replace( /^\&/, "" );
 }

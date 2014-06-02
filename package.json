@@ -28,7 +28,7 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "keigai": "0.2.16",
+    "keigai": "0.2.17",
     "btoa": "1.1.2"
   },
   "devDependencies": {
@@ -40,5 +40,5 @@
     "grunt-contrib-nodeunit": "~0.1.2",
     "grunt-contrib-watch": "~0.2"
   },
-  "keywords": ["fluidsurveys", "api", "wrapper", "survey"]
+  "keywords": ["fluidsurveys", "api", "wrapper", "survey", "surveys", "fluid", "fluidware"]
 }

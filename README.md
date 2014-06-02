@@ -19,7 +19,7 @@ api.list("survey", {group: "testing"}, function(err, arg) {
 	else {
 		// `arg` is a list of surveys in the "testing" group
 	}
-})
+});
 ```
 
 ## License

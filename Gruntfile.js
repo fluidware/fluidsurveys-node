@@ -19,10 +19,11 @@ module.exports = function (grunt) {
 				src : [
 					"<banner>",
 					"src/intro.js",
-					"src/base.js",
-					"src/serialize.js",
 					"src/routes.js",
+					"src/serialize.js",
+					"src/uri.js",
 					"src/fluidsurveys.js",
+					"src/factory.js",
 					"src/outro.js"
 				],
 				dest : "lib/<%= pkg.name %>.js"
@@ -68,7 +69,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	// aliases
-	grunt.registerTask("test", ["jshint", "nodeunit"]);
+	grunt.registerTask("test", ["jshint"/*, "nodeunit"*/]);
 	grunt.registerTask("build", ["concat", "sed"]);
-	grunt.registerTask("default", ["build"/*, "test"*/]);
+	grunt.registerTask("default", ["build", "test"]);
 };

@@ -1,1 +1,1 @@
-module.exports = fluidsurveys.factory;
+module.exports = factory;

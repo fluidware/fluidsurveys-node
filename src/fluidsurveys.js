@@ -285,7 +285,7 @@ FluidSurveys.prototype.request = function ( type, uri, body, headers ) {
  * @method update
  * @param  {String}   type Type of instance
  * @param  {Number}   id   Instance data
- * @param  {Object}   data [description]
+ * @param  {Object}   data HTTP request body
  * @param  {Function} fn   Callback
  * @return {Object}        {@link FluidSurveys}
  */

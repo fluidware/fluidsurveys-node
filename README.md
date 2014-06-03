@@ -49,6 +49,17 @@ Gets a paginated list of children under a parent.
 ### update ( type, id, data, cb )
 Updates an entity.
 
+## Caveats
+- Getting a 'survey' will retrieve the 'entity', and it's 'structure'
+- Updating a 'survey' supports modifying the 'entity', and/or the 'structure'
+
+## Issues
+The V3 API, and this wrapper are 'beta'. Please report issues you find!
+
+- Using `create()` for a `collector` and specifying a `survey` will result in an error (API bug), instead create the collector with `createChild()`.
+- Using `create()` for a `template` will result in an error (API bug)
+
+
 ## License
 Copyright (c) 2014 Fluidware
 Licensed under the MIT license.

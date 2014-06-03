@@ -10,7 +10,7 @@ function FluidSurveys ( username, password, host ) {
 	this.username = username;
 	this.password = password;
 	this.header   = "Basic " + btoa( username + ":" + password );
-	this.host     = host.replace( /\/$/, "" ) || HOST;
+	this.host     = typeof host == "string" ? host.replace( /\/$/, "" ) : HOST;
 }
 
 /**
@@ -46,11 +46,7 @@ FluidSurveys.prototype.create = function ( type, data, cb ) {
 
 	if ( type === "surveys" ) {
 		this.request( "post", url, {"name": data.structure.name || data.structure.title}, headers ).then( function ( arg ) {
-			self.request( "put", uri( self.host, type, arg.id, "structure" ), data, {
-				accept: "application/json",
-				authorization: self.header,
-				"content-type" : "application/json"
-			} ).then( function ( arg ) {
+			self.request( "put", uri( self.host, type, arg.id, "structure" ), data, headers ).then( function ( arg ) {
 				cb( null, arg );
 			}, function ( e ) {
 				cb( e, null );
@@ -60,9 +56,9 @@ FluidSurveys.prototype.create = function ( type, data, cb ) {
 		} );
 	}
 	else {
-		if ( type === "collectors" ) {
+		if ( array.contains( NOTJSON, type ) ) {
 			args = serialize(data);
-			delete headers["content-type"];
+			headers["content-type"] = "application/x-www-form-urlencoded";
 		}
 		else {
 			args = data;
@@ -88,27 +84,33 @@ FluidSurveys.prototype.create = function ( type, data, cb ) {
  * @return {Object}        {@link FluidSurveys}
  */
 FluidSurveys.prototype.createChild = function ( parentType, parentId, childType, data, cb ) {
-	var args, url;
+	var args, headers, url;
 
-	if ( typeof parentType != "string" || !( data instanceof Object ) || routes.collections[parentType] === undefined || routes.collections[parentType].indexOf( childType ) == -1 ) {
+	if ( typeof parentType != "string" || routes.collections[parentType] === undefined || routes.collections[parentType].indexOf( childType ) == -1 ) {
 		throw new Error( "Invalid arguments" );
 	}
 
-	url = uri( this.host, parentType, parentId, childType );
-
-	if ( childType === "collectors" ) {
-		args  = null;
-		url  += "?name=" + encodeURIComponent( data.name );
-	}
-	else {
-		args = data;
-	}
-
-	this.request( "post", url, args, {
+	headers = {
 		accept         : "application/json",
 		authorization  : this.header,
 		"content-type" : "application/json"
-	} ).then( function ( arg ) {
+	};
+
+	url = uri( this.host, parentType, parentId, childType );
+
+	if ( array.contains( NOTJSON, childType ) || array.contains( NOTJSON, parentType + ":" + childType ) ) {
+		args  = serialize( data );
+		headers["content-type"] = "application/x-www-form-urlencoded";
+	}
+	else {
+		args = data;
+
+		if ( !( args instanceof Object ) ) {
+			delete headers["content-type"];
+		}
+	}
+
+	this.request( "post", url, args, headers ).then( function ( arg ) {
 		cb( null, arg );
 	}, function ( e ) {
 		cb( e, null );
@@ -118,9 +120,9 @@ FluidSurveys.prototype.createChild = function ( parentType, parentId, childType,
 };
 
 /**
- * Gets a list of `type`
+ * Deletes an entity of `type`
  *
- * @method list
+ * @method delete
  * @param  {String}   type Type of instance to list
  * @param  {Number}   id   Instance identifier
  * @param  {Function} cb   Callback
@@ -146,21 +148,35 @@ FluidSurveys.prototype["delete"] = function ( type, id, cb ) {
 /**
  * Gets the details of instance of `type`
  *
- * @method details
+ * @method get
  * @param  {String}   type Type of instance
  * @param  {Number}   id   Instance identifier
  * @param  {Function} cb   Callback
  * @return {Object}        {@link FluidSurveys}
  */
 FluidSurveys.prototype.get = function ( type, id, cb ) {
+	var deferreds = [],
+	    headers, url;
+
 	if ( typeof cb != "function" ) {
 		throw new Error( "Invalid arguments" );
 	}
 
-	this.request( "get", uri( this.host, type, id ), null, {
+	headers = {
 		accept: "application/json",
 		authorization: this.header
-	} ).then( function ( arg ) {
+	};
+
+	url = uri( this.host, type, id );
+
+	deferreds.push( this.request( "get", url, null, headers ) );
+
+	// Retrieving the structure as well
+	if ( type === "surveys" ) {
+		deferreds.push( this.request( "get", uri( this.host, type, id, "structure" ), null, headers ) );
+	}
+
+	when( deferreds ).then( function ( arg ) {
 		cb( null, arg );
 	}, function ( e ) {
 		cb( e, null );
@@ -290,7 +306,9 @@ FluidSurveys.prototype.request = function ( type, uri, body, headers ) {
  * @return {Object}        {@link FluidSurveys}
  */
 FluidSurveys.prototype.update = function ( type, id, data, cb ) {
-	var headers, args, url;
+	var survey    = type === "surveys",
+	    deferreds = [],
+	    headers, args, url;
 
 	if ( !( data instanceof Object ) || typeof cb != "function" ) {
 		throw new Error( "Invalid arguments" );
@@ -302,17 +320,27 @@ FluidSurveys.prototype.update = function ( type, id, data, cb ) {
 		"content-type": "application/json"
 	};
 
-	url = uri( this.host, type, id );
+	url = survey ? uri( this.host, type, id, "structure" ) : uri( this.host, type, id );
 
-	if ( type === "collectors" ) {
-		args = "name=" + encodeURIComponent( data.name );
-		delete headers["content-type"];
+	if ( !survey && array.contains( NOTJSON, type ) ) {
+		args = serialize( data );
+		headers["content-type"] = "application/x-www-form-urlencoded";
 	}
 	else {
 		args = data;
 	}
+	
+	// Handles renaming a survey
+	if ( survey && args.name !== undefined ) {
+		deferreds.push( this.request( "put", uri( this.host, type, id ), {name: args.name}, headers ) );
+	}
 
-	this.request( "put", url, args, headers ).then( function ( arg ) {
+	// Handles changing a survey structure, or a generic `update`
+	if ( !survey || args.structure ) {
+		deferreds.push( this.request( "put", url, args, headers ) );
+	}
+
+	when( deferreds ).then( function ( arg ) {
 		cb( null, arg );
 	}, function ( e ) {
 		cb( e, null );

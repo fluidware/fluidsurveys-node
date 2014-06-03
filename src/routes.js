@@ -14,7 +14,7 @@ var routes = {
 		collectors      : [],
 		contacts        : [],
 		embed           : [],
-		"contact-lists" : [],
+		"contact-lists" : ["contacts"],
 		webhooks        : []
 	}
 };

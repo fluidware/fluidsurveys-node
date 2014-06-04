@@ -56,7 +56,6 @@ Updates an entity.
 ## Issues
 The V3 API, and this wrapper are 'beta'. Please report issues you find!
 
-- Using `create()` for a `collector` and specifying a `survey` will result in an error (API bug), instead create the collector with `createChild()`.
 - Using `create()` for a `template` will result in an error (API bug)
 
 

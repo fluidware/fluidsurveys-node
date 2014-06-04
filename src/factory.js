@@ -8,5 +8,9 @@
  * @return {Object}          {link @FluidSurveys}
  */
 function factory ( username, password, host ) {
-	return new FluidSurveys ( username, password, host );
+	if ( typeof username != "string" || username === "" || typeof password != "string" || password === "" ) {
+		throw new Error( "Invalid arguments" );
+	}
+
+	return new FluidSurveys ( username, password, typeof host == "string" ? host.replace( /\/$/, "" ) : HOST );
 }

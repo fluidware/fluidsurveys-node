@@ -7,10 +7,8 @@
  * @param  {String} host     [Optional] API host
  */
 function FluidSurveys ( username, password, host ) {
-	this.username = username;
-	this.password = password;
-	this.header   = "Basic " + btoa( username + ":" + password );
-	this.host     = typeof host == "string" ? host.replace( /\/$/, "" ) : HOST;
+	this.header = "Basic " + btoa( username + ":" + password );
+	this.host   = host;
 }
 
 /**
@@ -32,8 +30,15 @@ FluidSurveys.prototype.create = function ( type, data, cb ) {
 	var self = this,
 	    args, headers, url;
 
-	if ( typeof type != "string" || !( data instanceof Object ) || routes.collections[type] === undefined ) {
+	if ( typeof cb != "function" ) {
 		throw new Error( "Invalid arguments" );
+	}
+	else if ( typeof type != "string" || routes.collections[type] === undefined || !( data instanceof Object ) ) {
+		process.nextTick( function () {
+			cb( new Error( "Invalid arguments" ), null );
+		} );
+
+		return this;
 	}
 
 	headers = {
@@ -86,8 +91,15 @@ FluidSurveys.prototype.create = function ( type, data, cb ) {
 FluidSurveys.prototype.createChild = function ( parentType, parentId, childType, data, cb ) {
 	var args, headers, url;
 
-	if ( typeof parentType != "string" || routes.collections[parentType] === undefined || routes.collections[parentType].indexOf( childType ) == -1 ) {
+	if ( typeof cb != "function" ) {
 		throw new Error( "Invalid arguments" );
+	}
+	else if ( typeof parentType != "string" || typeof parentId != "number" || parentId <= 0 || typeof childType != "string" || routes.collections[parentType] === undefined || !array.contains( routes.collections[parentType], childType ) || !( data instanceof Object ) ) {
+		process.nextTick( function () {
+			cb( new Error( "Invalid arguments" ), null );
+		} );
+
+		return this;
 	}
 
 	headers = {
@@ -132,6 +144,13 @@ FluidSurveys.prototype["delete"] = function ( type, id, cb ) {
 	if ( typeof cb != "function" ) {
 		throw new Error( "Invalid arguments" );
 	}
+	else if ( typeof type != "string" || routes.collections[type] === undefined || typeof id != "number" || id <= 0 ) {
+		process.nextTick( function () {
+			cb( new Error( "Invalid arguments" ), null );
+		} );
+
+		return this;
+	}
 
 	this.request( "delete", uri( this.host, type, id ), null, {
 		accept: "application/json",
@@ -160,6 +179,13 @@ FluidSurveys.prototype.get = function ( type, id, cb ) {
 
 	if ( typeof cb != "function" ) {
 		throw new Error( "Invalid arguments" );
+	}
+	else if ( typeof type != "string" || routes.collections[type] === undefined || typeof id != "number" || id <= 0 ) {
+		process.nextTick( function () {
+			cb( new Error( "Invalid arguments" ), null );
+		} );
+
+		return this;
 	}
 
 	headers = {
@@ -197,8 +223,15 @@ FluidSurveys.prototype.get = function ( type, id, cb ) {
  * @return {Object}              {@link FluidSurveys}
  */
 FluidSurveys.prototype.getChild = function ( parentType, parentId, childType, childId, cb ) {
-	if ( typeof parentType != "string" || typeof cb != "function" || routes.collections[parentType] === undefined || routes.collections[parentType].indexOf( childType ) == -1 ) {
+	if ( typeof cb != "function" ) {
 		throw new Error( "Invalid arguments" );
+	}
+	else if ( typeof parentType != "string" || typeof parentId != "number" || parentId <= 0 || typeof childType != "string" || typeof childId != "number" || childId <= 0 || routes.collections[parentType] === undefined || !array.contains( routes.collections[parentType], childType ) ) {
+		process.nextTick( function () {
+			cb( new Error( "Invalid arguments" ), null );
+		} );
+
+		return this;
 	}
 
 	this.request( "get", uri( this.host, parentType, parentId, childType, childId ), null, {
@@ -222,11 +255,18 @@ FluidSurveys.prototype.getChild = function ( parentType, parentId, childType, ch
 FluidSurveys.prototype.list = function ( type, args, cb ) {
 	var queryString = "";
 
-	if ( typeof type != "string" || typeof cb != "function" || routes.collections[type] === undefined ) {
+	if ( typeof cb != "function" ) {
 		throw new Error( "Invalid arguments" );
 	}
+	else if ( typeof type != "string" || routes.collections[type] === undefined ) {
+		process.nextTick( function () {
+			cb( new Error( "Invalid arguments" ), null );
+		} );
 
-	if ( args instanceof Object ) {
+		return this;
+	}
+
+	if ( args instanceof Object && Object.keys( args ).length > 0 ) {
 		queryString = "?" + serialize( args );
 	}
 
@@ -254,11 +294,18 @@ FluidSurveys.prototype.list = function ( type, args, cb ) {
 FluidSurveys.prototype.listChildren = function ( parentType, parentId, childType, args, cb ) {
 	var queryString = "";
 
-	if ( typeof parentType != "string" || typeof cb != "function" || routes.collections[parentType] === undefined || routes.collections[parentType].indexOf( childType ) == -1 ) {
+	if ( typeof cb != "function" ) {
 		throw new Error( "Invalid arguments" );
 	}
+	else if ( typeof parentType != "string" || typeof parentId != "number" || parentId <= 0 || typeof childType != "string" || routes.collections[parentType] === undefined || !array.contains( routes.collections[parentType], childType ) ) {
+		process.nextTick( function () {
+			cb( new Error( "Invalid arguments" ), null );
+		} );
 
-	if ( args instanceof Object ) {
+		return this;
+	}
+
+	if ( args instanceof Object && Object.keys( args ).length > 0 ) {
 		queryString = "?" + serialize( args );
 	}
 
@@ -310,8 +357,15 @@ FluidSurveys.prototype.update = function ( type, id, data, cb ) {
 	    deferreds = [],
 	    headers, args, url;
 
-	if ( !( data instanceof Object ) || typeof cb != "function" ) {
+	if ( typeof cb != "function" ) {
 		throw new Error( "Invalid arguments" );
+	}
+	else if ( typeof type != "string" || typeof id != "number" || id <= 0 || routes.collections[type] === undefined || !( data instanceof Object ) ) {
+		process.nextTick( function () {
+			cb( new Error( "Invalid arguments" ), null );
+		} );
+
+		return this;
 	}
 
 	headers = {

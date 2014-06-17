@@ -10,7 +10,8 @@ function serialize ( arg ) {
 
 	if ( arg !== undefined ) {
 		iterate( arg, function ( value, key ) {
-			result += "&" + key + "=" + encodeURIComponent(value);
+			value   = encodeURIComponent( value );
+			result += "&" + key + ( PREDS.test( value ) ? value : "=" + value );
 		} );
 	}
 

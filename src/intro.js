@@ -7,4 +7,5 @@ var util    = require( "keigai" ).util,
     when    = util.when,
     btoa    = require( "btoa" ),
     HOST    = "https://fluidsurveys.com",
+    PREDS   = /^(<|>|=)/,
     NOTJSON = ["collectors", "invite_codes", "reports", "contact-lists:contacts"];

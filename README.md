@@ -2,15 +2,23 @@
 ***node.js wrapper for the FluidSurveys V3 API***
 
 ## Introduction
-This library provides a pure node.js interface for the [FluidSurveys API](http://docs.fluidsurveys.com). It requires node.js 0.8.x and newer.
+This library provides a simple abstraction of the [FluidSurveys API](http://docs.fluidsurveys.com).
+
+The factory takes an optional third parameter to specify the host (for whitelabels), and defaults to `https://fluidsurveys.com`. When specifying the host, please use `https`!
 
 ## Documentation
 View the lastest release API documentation [FluidSurveys API](http://docs.fluidsurveys.com).
 
+You can authenticate with one of the following combinations:
+
+- username & key
+- username & password
+- key & password
+
 ## Example
 ```javascript
 var fluidsurveys = require("fluidsurveys"),
-    api          = fluidsurveys("username|apikey", "password");
+    api          = fluidsurveys("username|key", "password|key"[, "host"]);
 
 api.list("surveys", {group: "testing"}, function(err, arg) {
 	if (err) {
@@ -56,9 +64,7 @@ Updates an entity.
 ## Issues
 The V3 API, and this wrapper are 'beta'. Please report issues you find!
 
-- Using `create()` for a `template` will result in an error (API bug)
-
 
 ## License
-Copyright (c) 2014 Fluidware
+Copyright (c) 2014 Fluidware Inc.
 Licensed under the MIT license.

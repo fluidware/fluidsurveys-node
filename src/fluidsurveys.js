@@ -30,10 +30,7 @@ FluidSurveys.prototype.create = function ( type, data, cb ) {
 	var self = this,
 	    args, headers, url;
 
-	if ( typeof cb != "function" ) {
-		throw new Error( "Invalid arguments" );
-	}
-	else if ( typeof type != "string" || routes.collections[type] === undefined || !( data instanceof Object ) ) {
+	if ( typeof cb != "function" || typeof type != "string" || routes.collections[type] === undefined || !( data instanceof Object ) ) {
 		process.nextTick( function () {
 			cb( new Error( "Invalid arguments" ), null );
 		} );
@@ -62,7 +59,7 @@ FluidSurveys.prototype.create = function ( type, data, cb ) {
 	}
 	else {
 		if ( array.contains( NOTJSON, type ) ) {
-			args = serialize(data);
+			args = serialize( data );
 			headers["content-type"] = "application/x-www-form-urlencoded";
 		}
 		else {
@@ -91,10 +88,7 @@ FluidSurveys.prototype.create = function ( type, data, cb ) {
 FluidSurveys.prototype.createChild = function ( parentType, parentId, childType, data, cb ) {
 	var args, headers, url;
 
-	if ( typeof cb != "function" ) {
-		throw new Error( "Invalid arguments" );
-	}
-	else if ( typeof parentType != "string" || typeof parentId != "number" || parentId <= 0 || typeof childType != "string" || routes.collections[parentType] === undefined || !array.contains( routes.collections[parentType], childType ) || !( data instanceof Object ) ) {
+	if ( typeof cb != "function" || typeof parentType != "string" || typeof parentId != "number" || parentId <= 0 || typeof childType != "string" || routes.collections[parentType] === undefined || !array.contains( routes.collections[parentType], childType ) || !( data instanceof Object ) ) {
 		process.nextTick( function () {
 			cb( new Error( "Invalid arguments" ), null );
 		} );
@@ -141,10 +135,7 @@ FluidSurveys.prototype.createChild = function ( parentType, parentId, childType,
  * @return {Object}        {@link FluidSurveys}
  */
 FluidSurveys.prototype["delete"] = function ( type, id, cb ) {
-	if ( typeof cb != "function" ) {
-		throw new Error( "Invalid arguments" );
-	}
-	else if ( typeof type != "string" || routes.collections[type] === undefined || typeof id != "number" || id <= 0 ) {
+	if ( typeof cb != "function" || typeof type != "string" || routes.collections[type] === undefined || typeof id != "number" || id <= 0 ) {
 		process.nextTick( function () {
 			cb( new Error( "Invalid arguments" ), null );
 		} );
@@ -177,10 +168,7 @@ FluidSurveys.prototype.get = function ( type, id, cb ) {
 	var deferreds = [],
 	    headers, url;
 
-	if ( typeof cb != "function" ) {
-		throw new Error( "Invalid arguments" );
-	}
-	else if ( typeof type != "string" || routes.collections[type] === undefined || typeof id != "number" || id <= 0 ) {
+	if ( typeof cb != "function" || typeof type != "string" || routes.collections[type] === undefined || typeof id != "number" || id <= 0 ) {
 		process.nextTick( function () {
 			cb( new Error( "Invalid arguments" ), null );
 		} );
@@ -223,10 +211,7 @@ FluidSurveys.prototype.get = function ( type, id, cb ) {
  * @return {Object}              {@link FluidSurveys}
  */
 FluidSurveys.prototype.getChild = function ( parentType, parentId, childType, childId, cb ) {
-	if ( typeof cb != "function" ) {
-		throw new Error( "Invalid arguments" );
-	}
-	else if ( typeof parentType != "string" || typeof parentId != "number" || parentId <= 0 || typeof childType != "string" || typeof childId != "number" || childId <= 0 || routes.collections[parentType] === undefined || !array.contains( routes.collections[parentType], childType ) ) {
+	if ( typeof cb != "function" || typeof parentType != "string" || typeof parentId != "number" || parentId <= 0 || typeof childType != "string" || typeof childId != "number" || childId <= 0 || routes.collections[parentType] === undefined || !array.contains( routes.collections[parentType], childType ) ) {
 		process.nextTick( function () {
 			cb( new Error( "Invalid arguments" ), null );
 		} );
@@ -255,10 +240,7 @@ FluidSurveys.prototype.getChild = function ( parentType, parentId, childType, ch
 FluidSurveys.prototype.list = function ( type, args, cb ) {
 	var queryString = "";
 
-	if ( typeof cb != "function" ) {
-		throw new Error( "Invalid arguments" );
-	}
-	else if ( typeof type != "string" || routes.collections[type] === undefined ) {
+	if ( typeof cb != "function" || typeof type != "string" || routes.collections[type] === undefined ) {
 		process.nextTick( function () {
 			cb( new Error( "Invalid arguments" ), null );
 		} );
@@ -294,10 +276,7 @@ FluidSurveys.prototype.list = function ( type, args, cb ) {
 FluidSurveys.prototype.listChildren = function ( parentType, parentId, childType, args, cb ) {
 	var queryString = "";
 
-	if ( typeof cb != "function" ) {
-		throw new Error( "Invalid arguments" );
-	}
-	else if ( typeof parentType != "string" || typeof parentId != "number" || parentId <= 0 || typeof childType != "string" || routes.collections[parentType] === undefined || !array.contains( routes.collections[parentType], childType ) ) {
+	if ( typeof cb != "function" || typeof parentType != "string" || typeof parentId != "number" || parentId <= 0 || typeof childType != "string" || routes.collections[parentType] === undefined || !array.contains( routes.collections[parentType], childType ) ) {
 		process.nextTick( function () {
 			cb( new Error( "Invalid arguments" ), null );
 		} );
@@ -330,15 +309,18 @@ FluidSurveys.prototype.listChildren = function ( parentType, parentId, childType
  * @return {Object}         Deferred/Promise
  */
 FluidSurveys.prototype.request = function ( type, uri, body, headers ) {
+	var defer = deferred();
+
 	switch ( type ) {
 		case "delete":
 		case "get":
-			return request( uri, type.toUpperCase(), null, null, null, headers );
+			return request( uri, type.toUpperCase(), null, headers );
 		case "post":
 		case "put":
-			return request( uri, type.toUpperCase(), null, null, body, headers );
+			return request( uri, type.toUpperCase(), body, headers );
 		default:
-			throw new Error( "Invalid arguments" );
+			defer.reject( new Error( "Invalid arguments" ) );
+			return defer;
 	}
 };
 
@@ -357,10 +339,7 @@ FluidSurveys.prototype.update = function ( type, id, data, cb ) {
 	    deferreds = [],
 	    headers, args, url;
 
-	if ( typeof cb != "function" ) {
-		throw new Error( "Invalid arguments" );
-	}
-	else if ( typeof type != "string" || typeof id != "number" || id <= 0 || routes.collections[type] === undefined || !( data instanceof Object ) ) {
+	if ( typeof cb != "function" || typeof type != "string" || typeof id != "number" || id <= 0 || routes.collections[type] === undefined || !( data instanceof Object ) ) {
 		process.nextTick( function () {
 			cb( new Error( "Invalid arguments" ), null );
 		} );

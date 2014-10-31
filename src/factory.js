@@ -4,7 +4,7 @@
  * @method factory
  * @param  {String} username Username or API key
  * @param  {String} password Password
- * @param  {String} host     [Optional] API host
+ * @param  {String} host     [Optional] API host, defaults to "https://fluidsurveys.com"
  * @return {Object}          {link @FluidSurveys}
  */
 function factory ( username, password, host ) {

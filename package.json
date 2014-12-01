@@ -1,7 +1,7 @@
 {
   "name": "fluidsurveys",
   "description": "FluidSurveys API wrapper",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "homepage": "http://fluidsurveys.com",
   "author": {
     "name": "Jason Mulligan",
@@ -22,13 +22,13 @@
   ],
   "main": "lib/fluidsurveys",
   "engines": {
-    "node": ">=0.8.0"
+    "node": ">=0.10.0"
   },
   "scripts": {
     "test": "grunt test"
   },
   "dependencies": {
-    "keigai": "~0.8.6",
+    "keigai": "~1.0.0",
     "btoa": "~1.1.2"
   },
   "devDependencies": {

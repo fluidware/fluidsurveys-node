@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.2.1
+- Upgrading dependency such that the process will exit upon completion
+
 ## 0.2.0
 - Standardized errors generated within methods, such that all will fire the `cb` properly
 - Updated dependencies
